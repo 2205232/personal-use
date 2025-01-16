@@ -1,0 +1,25 @@
+
+
+<!-- <h2 mat-dialog-title>Documents Upload Successfully!</h2>
+<mat-dialog-content>
+    <p>Do you want to process these files</p>
+</mat-dialog-content>
+<mat-dialog-actions aling="end">
+    <button mat-button mat-dialog-close="later>"Process Later></button>
+    <button mat-raised-buttoncolor="primary" [mat-dialog-close]="'now'">Process Now</button>
+</mat-dialog-actions> -->
+
+
+<mat-dialog-content>
+    <div class="dialog-container">
+     
+        <mat-icon class="close-btn" mat-dialog-close >highlight_off</mat-icon> 
+      <p>File processed Successfully</p>
+    </div>
+  </mat-dialog-content>
+  
+  <mat-dialog-actions align="center">
+    
+    <button mat-flat-button class="process-now-btn" mat-dialog-close  (click)="closedialog()">OK</button>
+  </mat-dialog-actions>
+  

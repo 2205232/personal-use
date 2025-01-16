@@ -1,0 +1,101 @@
+.dialog-container {
+    position: relative; // To position the close button
+    text-align: center;
+    padding: 16px;
+    //background: #fff;
+  
+    // Close Button (Top-Right)
+    .close-btn {
+        position: absolute;
+        top: 2px;
+        right: 4px;
+        color: #ac3838;
+        font-size: 24px;
+        cursor: pointer;
+    }
+  
+    // Icon and h2 on the Same Line
+    .icon-and-text {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px; // Spacing between icon and text
+      margin-bottom: 16px;
+  
+      .success-icon {
+        font-size: 24px; // Icon size
+        color: #4caf50; // Green success color
+      }
+  
+      h2 {
+        font-size: 20px; // Heading size
+        margin: 0;
+        font-weight: 600; // Bold heading
+      }
+    }
+  
+    // Subtext below the header
+    p {
+      font-size: 14px; // Smaller text
+      color: #666; // Neutral color
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+  }
+  
+  mat-dialog-actions {
+    display: flex;
+    justify-content: space-between; // Two buttons spaced apart
+    padding: 16px;
+    gap: 16px;
+    margin-bottom: 16px;
+
+    .process-later-btn {
+      font-size: 14px;
+      color: #131212; // Neutral text color
+      font-weight: bold;
+      border-radius: 8px;
+      height: 32px;
+     
+    }
+  
+    .process-now-btn {
+      font-size: 14px;
+      font-weight: bold;
+      background-color: #1976d2; 
+      color: #FFFFFF;  
+      border-radius: 8px;
+      height: 32px;
+    }
+  }
+  
+  // Custom Dialog Styles (Optional)
+  .custom-dialog-container {
+    border-radius: 8px; // Rounded corners for dialog
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); // Subtle shadow
+    max-width: 400px; // Maximum width
+  }
+
+  @media (max-width: 600px) {
+    .dialog-container {
+      padding: 12px;
+  
+      .icon-and-text {
+        gap: 8px; // Reduce spacing for smaller screens
+      }
+  
+      p {
+        font-size: 12px; // Smaller text
+      }
+    }
+  
+    mat-dialog-actions {
+      flex-direction: column; // Stack buttons vertically
+      gap: 8px; // Space between buttons  
+      .process-later-btn,
+      .process-now-btn {
+        width: 100%; // Full width for buttons on small screens
+      }
+    }
+  }
+  

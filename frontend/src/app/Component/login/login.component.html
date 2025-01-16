@@ -1,0 +1,97 @@
+
+    <div class="login-container">
+        <div class="login-background-image">
+        </div>
+        <div class="login-form" *ngIf="!isforgotPwd && !isForgotPwdNotification">
+            
+            <div class="login-header">DigiSahayak</div>
+            <div class="login-header-2">Login</div>
+            <div class="login-header-3">Nice to see you again</div>
+            <button class="google-signin-button"
+            (click)="redirectToGoogle()">
+            </button>
+            <div class="or-label">or</div>
+            <form  #loginForm="ngForm" (ngSubmit)="onSubmit()">
+               
+                <div class="input-field">
+                <mat-form-field class="form-field">
+                    <mat-label>Email id</mat-label>
+                    <input matInput [(ngModel)]="email" id="email" name="email" required  email
+                    #emailField="ngModel">
+                    <mat-error *ngIf="emailField.invalid && 
+              emailField.touched && emailField.errors?.['required']">
+                 Email is required
+              </mat-error>
+              <mat-error *ngIf="emailField.invalid && 
+              emailField.touched && emailField.errors?.['email']">
+                 Please enter a valid email
+              </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="input-field">
+                <mat-form-field class="form-field">
+                    <mat-label>Password</mat-label>
+                    <input matInput
+                    type="password" [(ngModel)]="password" id="password" name="password" required
+                    minlength="4" #passwordField="ngModel">
+                    <mat-error *ngIf="passwordField.invalid && 
+              passwordField.touched && passwordField.errors?.['required']">
+                 Password is required
+              </mat-error>
+                  </mat-form-field>
+                  </div>
+               
+                <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p> 
+
+
+                <div class="options">
+                    <label class="option-label">
+                        <input type="checkbox"/> Remember me
+                    </label>
+                    <a class="forgot-password" (click)="showForgotPassword()">Forgot Password?</a>
+                </div>
+                <button mat-flat-button type="submit" class="login-button" [disabled]="!loginForm.valid">Login</button>
+            </form>
+            <p class="signup-prompt">
+                Don't have an account? <a href="/SignIn">Sign-up now</a>
+            </p>
+        </div>
+
+        <div class="login-form" *ngIf="isforgotPwd">
+            <div class="login-header">DigiSahayak</div>
+            <div class="login-header-2">Forgot Password</div>
+            <div class="login-header-3">Enter your email id to reset the password</div>
+            <div class="input-field">
+                <mat-form-field class="form-field">
+                    <mat-label>Email id</mat-label>
+                    <input matInput [(ngModel)]="email" id="email" name="email" required  email
+                    #emailField="ngModel">
+                    <mat-error *ngIf="emailField.invalid && 
+                    emailField.touched && emailField.errors?.['required']">
+                       Email is required
+                    </mat-error>
+                    <mat-error *ngIf="emailField.invalid && 
+                    emailField.touched && emailField.errors?.['email']">
+                       Please enter a valid email
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <button mat-flat-button type="submit" class="submit-button" [disabled]="emailField.invalid"
+                 (click)="goToResetPassword()">Submit</button>
+                <a class="cancel-button" href="/Login">Cancel</a>
+
+        </div>
+
+        <div class="login-form" *ngIf="isForgotPwdNotification">
+            <div class="login-header">DigiSahayak</div>
+            <div class="login-header-3">Password link sent to your email ID</div>
+            <p> If an account exists for {{email}}, you will get an instructions on resetting
+                your password. If it doesn't arrive, be sure to check your spam folder.
+            </p>
+           
+                <a class="cancel-button" href="/ResetPassword">Reset Your Password</a>
+
+        </div>
+
+        
+    </div>

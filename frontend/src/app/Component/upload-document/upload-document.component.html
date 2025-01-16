@@ -1,0 +1,293 @@
+<div class="container" >
+    <div class="back-button" >
+      <button mat-stroked-button (click)="backtodashboard()">
+        <mat-icon>keyboard_backspace</mat-icon>
+        Back</button>
+    </div>  
+    <div Class ="upload-container" *ngIf="isVisible"> 
+      <div class="upload-box-options">
+        <mat-icon>add_to_photos</mat-icon>
+        <p>No Record Found</p> 
+        <button mat-stroked-button (click)="toggleVisibility()">          
+          + File Upload</button>
+      </div>
+    </div> 
+
+    <mat-card *ngIf="!isVisible && showtable">
+      <h2>File Upload</h2>
+      <p class="grey-text">Add your documents here, and you can upload up to 5 files max</p>
+  
+      <div class="upload-area"
+      (drop)="onFileDropped($event)"
+      (dragover)="onDragOver($event)">
+        <mat-icon>cloud_upload</mat-icon>
+        <p >Drag your file(s) to start uploading</p>
+        <button mat-stroked-button (click)="fileInput.click()">
+          Browse file</button>
+          <input #fileInput type="file" (change)="fileSelected($event)" multiple 
+          accept=".jpg,.png,.svg,..zip" hidden  />
+      </div>
+  
+      <p class="grey-text">Only supports .jpg, .png, .svg, and .zip files</p>
+      <p *ngIf="files.length" class="bold-grey-text">Documents ready for upload</p>
+  
+      <div class="link-upload" *ngIf="!files.length">
+        <mat-form-field appearance="outline" class="url-input">
+          <mat-label>Add the file URL</mat-label>
+          <input matInput 
+          type="text"
+          [(ngModel)]="newLink"/>
+        </mat-form-field>
+      </div>
+
+      <!-- File List with Progress -->
+    <div class="file-list" *ngIf="files.length>0">
+      <div *ngFor="let file of files; let i = index" class="file-item">
+        <span>{{ file.name }} ({{ (file.size / 1024).toFixed(2) }} KB)</span>
+        <mat-progress-bar style="margin-right: 24px;"
+          
+          [value]="progress"
+        ></mat-progress-bar>
+        <p style="margin-top: 4px;">{{ progress }}% Uploaded</p>
+        <button mat-icon-button class="remove-button" (click)="removeFile(i)">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </div>
+    </div>
+  
+      <div class="actions">
+          <button  mat-flat-button color="warn" [disabled]="!files.length && !newLink.length" (click)="clearFiles()">
+            <mat-icon>close</mat-icon>
+            Cancel</button>
+          <button mat-flat-button  [disabled]="!files.length && !newLink.length"
+          (click)="upload()">
+            <mat-icon>arrow_upward</mat-icon>
+            Upload</button>
+
+            <!-- <div *ngIf="uploadSuccess" class="modal">
+              <div class="modal-content">
+                <mat-icon class="check">check_circle_outline</mat-icon>
+                <h2>Documents upload successfully!</h2>
+                <p>Do you want to process these files?</p>
+                <button (click)="processLater()" mat-stroked-button>Process Later</button>
+                <button (click)="processNow()" mat-flat-button>Process Now</button>
+              </div>
+            </div> -->
+
+            <!-- <div *ngIf="uploadSuccess" class="modal">
+      <div class="modal-content">
+        <mat-icon class="check">check_circle_outline</mat-icon>
+        <h2>File processed successfully</h2>
+        <button (click)="confirmationOk()" mat-flat-button>Ok</button>
+      </div>
+    </div>  -->
+      </div>
+    </mat-card>
+<!--Upload Table Start-->
+  <mat-card class="table-container" *ngIf="!showtable && (uploadedFiles.length > 0 || uploadedLinks.length > 0) && isShowUploadedFiles">
+    <mat-card-header>
+      <div class="card-header">
+        <mat-card-title>Uploaded Files & Links</mat-card-title>
+        <div class="action-header-buttons">
+      <button mat-stroked-button class="file-delete-button" (click)="showBrowseFiles()">          
+         Delete</button>
+      <button mat-stroked-button class="file-delete-button" (click)="showBrowseFiles()">          
+         Retrain</button>
+      <button mat-stroked-button class="file-upload-button" (click)="showBrowseFiles()">          
+         File Upload</button>
+        </div>
+       </div>      
+    </mat-card-header>
+
+  <mat-tab-group class="tab-container" [(selectedIndex)]="selectedTabIndex">
+
+  <!--FILE TAB START-->
+    <mat-tab class="file-tab" label="Files">
+    <div class="search-form-container" *ngIf="uploadedFiles.length > 0">
+      <mat-form-field class="search-container">   
+        <input type="text" matInput  placeholder="Search"
+        (keyup)="applyFilter($event)"
+        #filter>
+        <mat-icon matPrefix style="cursor: pointer;">search</mat-icon>
+      </mat-form-field>    
+    </div>
+  
+    <div style="display: flex; flex-direction: column;" *ngIf="uploadedFiles.length > 0 && !showtable " >
+      <mat-table [dataSource]="uploadedFiles" class="mat-elevation-z8">
+
+        <!--CHECKBOX START-->
+        <ng-container matColumnDef="select">
+          <mat-header-cell *matHeaderCellDef>
+            <mat-checkbox 
+            (change)="selectAll($event.checked)"
+            [checked]="isAllSelected()">
+            </mat-checkbox>
+          </mat-header-cell>
+          <mat-cell class="mat-cell" *matCellDef="let file">
+            <mat-checkbox [(ngModel)]="file.isSelected">
+            </mat-checkbox>
+          </mat-cell>
+        </ng-container>
+        <!--CHECKBOX END-->
+  
+        <!--FILENAME START-->
+        <ng-container matColumnDef="fileName">
+          <mat-header-cell *matHeaderCellDef> File Name </mat-header-cell>
+          <mat-cell class="mat-cell" *matCellDef="let file">
+             {{file.name}} </mat-cell>
+        </ng-container>
+        <!--FILENAME END-->
+
+        <!--FILESIZE START-->
+        <ng-container matColumnDef="fileSize">
+          <mat-header-cell *matHeaderCellDef> File Size </mat-header-cell>
+          <mat-cell class="mat-cell" *matCellDef="let file"> {{formatFileSize(file.size)}} </mat-cell>
+        </ng-container>
+        <!--FILESIZE END-->
+
+        <!--Indexing Status start-->
+        <ng-container matColumnDef="indexingStatus">
+          <mat-header-cell *matHeaderCellDef> Indexing Status </mat-header-cell>
+          <mat-cell class="mat-cell" *matCellDef="let file"> 
+            <mat-icon [ngClass]="{ processed: file.status === 'Processed', unprocessed: file.status === 'Unprocessed' }"> pending </mat-icon>
+            <span >
+              {{ file.status }}
+            </span>
+          </mat-cell>
+        </ng-container>
+                <!--Indexing Status end-->
+
+
+        <!--File action start-->        
+        <ng-container matColumnDef="action">
+          <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+          <mat-cell class="mat-cell" *matCellDef="let file; let i= index">
+            <!-- <button mat-button>Download</button>
+            <button mat-button>Delete</button> -->
+            <div class="actions">
+            <!-- <mat-icon class="download-icon" (click)="onDownload(file)">download</mat-icon>
+            <mat-icon class="delete-icon" (click)="onDelete(file)">delete</mat-icon> -->
+            <mat-icon class="action-icon" (click)="openAction(i, $event, file)">more_vert</mat-icon>
+
+              <!---MENU START-->
+              <div
+              *ngIf="activeRowIndex === i"
+              class="action"
+              (click)="closeAction()"
+              (mouseLeave)="closeAction()"
+              >
+              <div class="action-options" (click)="deleteDocument(i)">
+                <mat-icon>delete</mat-icon> <label> Delete </label></div>
+                <div class="action-options" style="padding-top: 0px; padding-bottom: 0px;" (click)="onUploadAction('retrain', file)">
+                  <mat-icon>autorenew</mat-icon> <label> Retrain </label></div>
+                  <div class="action-options" (click)="onUploadAction('download', file)">
+                    <mat-icon>download</mat-icon> <label> Download </label></div>
+            </div>
+              <!--MENU END-->
+
+          </div>
+          </mat-cell>
+        </ng-container>
+  <!--File action end-->   
+
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      </mat-table>
+    </div>
+
+    <div *ngIf="uploadedFiles.length === 0"> No files to display</div>
+    </mat-tab>
+     <!--FILE TAB END-->
+
+      <!--LINK TAB START-->
+    <mat-tab label="Links">
+      <div class="search-form-container" *ngIf="uploadedLinks.length > 0">
+        <mat-form-field class="search-container">   
+          <input type="text" matInput  placeholder="Search">
+          <mat-icon matPrefix style="cursor: pointer;">search</mat-icon>
+        </mat-form-field>    
+      </div>
+    
+      <div style="display: flex; flex-direction: column;" *ngIf="uploadedLinks.length > 0">
+        <mat-table [dataSource]="uploadedLinks" class="mat-elevation-z8">
+  
+          <!--CHECKBOX START-->
+          <ng-container matColumnDef="select">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-checkbox 
+              (change)="selectAll($event.checked)"
+              [checked]="isAllSelected()">
+              </mat-checkbox>
+            </mat-header-cell>
+            <mat-cell class="mat-cell" *matCellDef="let link">
+              <mat-checkbox [(ngModel)]="link.isSelected">
+              </mat-checkbox>
+            </mat-cell>
+          </ng-container>
+          <!--CHECKBOX END-->
+  
+    
+          <!--FILENAME START-->
+          <ng-container matColumnDef="linkName">
+            <mat-header-cell *matHeaderCellDef> Link </mat-header-cell>
+            <mat-cell class="mat-cell" *matCellDef="let link">
+               {{link.name}} </mat-cell>
+          </ng-container>
+          <!--FILENAME END-->
+
+   <!--Indexing Status start-->
+   <ng-container matColumnDef="indexingStatus">
+    <mat-header-cell *matHeaderCellDef> Indexing Status </mat-header-cell>
+    <mat-cell class="mat-cell" *matCellDef="let link"> 
+      <mat-icon style="color: yellow;"> pending </mat-icon> </mat-cell>
+  </ng-container>
+          <!--Indexing Status end-->
+  
+  
+          <!--File action start-->        
+          <ng-container matColumnDef="action">
+            <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+            <mat-cell class="mat-cell" *matCellDef="let link; let i= index">
+              <!-- <button mat-button>Download</button>
+              <button mat-button>Delete</button> -->
+              <div class="actions">
+              <!-- <mat-icon class="download-icon" (click)="onDownload(file)">download</mat-icon>
+              <mat-icon class="delete-icon" (click)="onDelete(file)">delete</mat-icon> -->
+              <mat-icon class="action-icon" (click)="openAction(i, $event, link)">more_vert</mat-icon>
+  
+                <!---MENU START-->
+                <div
+                *ngIf="activeRowIndex === i"
+                class="action"
+                (click)="closeAction()"
+                (mouseLeave)="closeAction()"
+                >
+                <div class="action-options" (click)="onUploadAction('delete', link)">
+                  <mat-icon>delete</mat-icon> <label> Delete </label></div>
+                <div class="action-options" style="padding-top: 0px; padding-bottom: 0px;" (click)="onUploadAction('retrain', link)">
+                <mat-icon>autorenew</mat-icon> <label> Retrain </label></div>
+                <div class="action-options" (click)="onUploadAction('download', link)">
+                      <mat-icon>download</mat-icon> <label> Download </label></div>
+              </div>
+                <!--MENU END-->
+            </div>
+            </mat-cell>
+          </ng-container>
+    <!--File action end-->   
+  
+  
+          <mat-header-row *matHeaderRowDef="displayedColumns_links"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns_links"></mat-row>
+        </mat-table>
+      </div>
+
+      <div *ngIf="uploadedLinks.length === 0"> No links to display</div>
+       </mat-tab>
+  <!--LINK TAB END-->
+  </mat-tab-group>
+  </mat-card>
+  <!-- UPLOAD TABLE END  --> 
+</div>
+
+

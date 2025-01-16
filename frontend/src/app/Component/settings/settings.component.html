@@ -1,0 +1,96 @@
+<div class="container" >
+    <div class="back-button" >
+      <button mat-stroked-button (click)="backtodashboard()">
+        <mat-icon>keyboard_backspace</mat-icon>
+        Back</button>
+    </div>  
+    <div Class ="upload-container"> 
+        <div class="settings-header">Settings</div>
+        <div>Add your details and upload your profile picture</div>
+<div class="settings-box">
+        <div class="settings-menu-box">
+    <div class="settings-options">
+        <mat-icon class="settings-icon">settings</mat-icon>General
+    </div>
+    <div class="divider"></div>
+    <div class="settings-options">
+        <mat-icon class="settings-icon">settings</mat-icon>Homepage
+    </div>
+    <div class="divider"></div>
+    <div class="settings-options">
+        <mat-icon class="settings-icon">settings</mat-icon>Others
+    </div>
+
+</div>
+
+<div class="settings-notification-box">
+    <div class="settings-header">Notifications</div>
+    <div class="divider"></div>
+    <div class="notify-toggle-box">
+        <div><b>Notify me</b> <br>when new updates available</div>
+        <mat-slide-toggle> 
+             </mat-slide-toggle>
+    </div>
+
+    <div class="notify-toggle-box">
+        <div><b>Desktop Notification</b>
+            <br>Recieve desktop notifications</div>
+        <mat-slide-toggle> 
+             </mat-slide-toggle>
+    </div>
+
+    <div class="settings-header">My Settings</div>
+    <div class="divider"></div>
+    <div class="notify-toggle-box">
+        <div><b>Language</b> <br>Customize how your language looks on your device</div>
+        <mat-select appearance="outline" class="select-box"> 
+            <mat-option class="select-options" *ngFor="let language of languages"
+            [value]="language">
+        {{language}}
+        </mat-option>
+        </mat-select>
+    </div>
+
+    <div class="notify-toggle-box">
+        <div><b>Appearance</b> <br>Customize how your themese looks on your device</div>
+        <mat-select appearance="outline" class="select-box"> 
+            <mat-option class="select-options" *ngFor="let appearance of appearances"
+            [value]="appearance">
+        {{appearance}}
+        </mat-option>
+        </mat-select>
+    </div>
+    <div class="settings-header">Home Page Settings</div>
+    <div class="divider"></div>
+    <div class="notify-toggle-box">
+        <div><b>Flash card Questions</b>
+            <br>Number of questions to be displayed as a flash card</div>
+                <mat-select appearance="outline" class="select-box"
+                [(ngModel)]="selectedPromptsPerPage"
+                (selectionChange)="onPromptsPerPageChange($event.value)"> 
+                    <mat-option class="select-options"
+                     *ngFor="let promptsPerPageOption of promptsPerPageOptions"
+                    [value]="promptsPerPageOption"
+                   
+                    >
+                {{promptsPerPageOption}}
+                </mat-option>
+                </mat-select>
+    </div>
+    <div class="actions">
+          
+        <button mat-stroked-button
+        (click)="backtodashboard()">
+            Cancel</button>
+        
+        <button mat-flat-button
+        (click)="backtodashboard()">
+          Save</button>
+    </div>
+</div>
+
+</div>
+      </div> 
+</div>
+
+

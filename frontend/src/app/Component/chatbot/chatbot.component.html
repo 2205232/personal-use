@@ -1,0 +1,72 @@
+<div class="chat-container">
+    <div *ngIf="showgoogle" class ="container">
+        <h1 >Good day! How may I assist you today?</h1>
+        <div class="prompt-container" >
+            <mat-card class="prompt-card" *ngFor="let prompt of prompts.slice(0, promptsPerPage)">                
+                <img class="prompt-icon" src="/assets/Round_image.svg" alt="Prompt Image"/>
+                <div class="prompt-inner-content">
+                    <h2>{{ prompt.title }}</h2>
+                    <div class="row">
+                    <p>{{ prompt.description }}</p>               
+                    <mat-icon class="forward-arrow">arrow_forward</mat-icon>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+        
+        <div *ngIf ="!showgoogle" class="chat-messages" #chatWindow>
+            <div *ngFor="let message of messages" class="message" [ngClass]="message.sender">
+                <div class="avatar">
+                    <img
+                    [src]="message.sender === 'user' ? 'assets/user.svg' : 'assets/bot.svg'"
+                    alt="avatar"
+                  />
+                </div>
+                <span class="message-text">{{ message.text }}</span>
+                    
+                    
+                    <div *ngIf="message.sender === 'bot'" class="interaction-options">
+                        <!-- <button (click)="likeMessage(message)">
+                            <fa-icon [icon]="faThumbsUp"></fa-icon>
+                        </button>
+                        <button (click)="dislikeMessage(message)">
+                            <fa-icon [icon]="faThumbsDown"></fa-icon>
+                        </button>
+                        <button (click)="copyMessage(message.text)">
+                            <fa-icon [icon]="faCopy"></fa-icon>
+                        </button>
+                        <button (click)="shareMessage(message.text)">
+                            <fa-icon [icon]="faShareAlt"></fa-icon>
+                        </button> -->
+                       
+                            <mat-icon class="chat-icons" (click)="likeMessage(message)">thumb_up</mat-icon>
+                                <mat-icon  class="chat-icons" (click)="dislikeMessage(message)">thumb_down</mat-icon>
+                                <mat-icon class="chat-icons" (click)="copyMessage(message.text)">file_copy</mat-icon>
+                                <mat-icon class="chat-icons" (click)="shareMessage(message.text)">share</mat-icon>
+
+                    </div>
+            </div>
+            <div *ngIf="isLoading" >
+                <ngx-skeleton-loader   count="2"   appearance="line"  animation="progress-dark">              
+                </ngx-skeleton-loader>
+            </div>
+        </div>
+
+        <div class="chat-input-container">
+            <button class="audio-btn"  (mousedown)="startListening()" (mouseup)="stopRecording()">
+                <span class="material-icons">  mic   </span>
+            </button>
+            <textarea class="chat-input" type="text" placeholder="Ask me anything..." 
+               title = "Send Messages" 
+               (keyup.enter)="sendMessage()"
+               [(ngModel)]="searchText">
+            </textarea>
+            <button [ngClass]="{'enabled': searchText.trim(), 'disabled': !searchText.trim()}"
+               (click)="sendMessage()" [disabled]="!searchText.trim()"> 
+                <span class="material-icons" style="color: white;">
+                    arrow_forward
+                    </span>
+            </button>
+        </div>
+</div>

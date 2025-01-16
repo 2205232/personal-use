@@ -1,0 +1,118 @@
+<div class="container" >
+    <div class="back-button" >
+      <button mat-stroked-button (click)="backtodashboard()">
+        <mat-icon>keyboard_backspace</mat-icon>
+        Back</button>
+    </div> 
+    <div Class ="user-container" > 
+        <div class="upload-box-options">
+          <h2>Edit Profile</h2>
+          <p>  Add your details and upload your picture </p>
+
+          <div Class ="profile-container" > 
+            <div class="profile">
+              <div class="image-container">
+                <img [src]="user.image || 'assets/userlogo.png'"
+                  alt="User Image"  class="user-image"
+                />
+                <input   type="file"  id="fileInput"  (change)="onImageUpload($event)" accept="image/*"
+                  class="file-input"  />
+                <label for="fileInput" class="edit-button">
+                  <span class="material-icons">edit</span>
+                </label>
+              </div>
+            
+              <!-- Template-Driven Form -->
+              <form #userForm="ngForm" (ngSubmit)="onSubmit(userForm)">
+                <!-- Full Name -->
+                <div class="form-group">
+                  <mat-form-field class="form-field" style="width:450px">
+                    <mat-label>Full Name</mat-label>
+                    <input
+                      matInput
+                      name="fullName"
+                      [(ngModel)]="user.fullName"
+                      required
+                      #fullName="ngModel"
+                    />
+                    <div *ngIf="fullName.invalid && fullName.touched" class="error">
+                      Full Name is required.
+                    </div>
+                  </mat-form-field>
+                </div>
+            
+                <!-- Email -->
+                <div class="form-group">
+                  <mat-form-field  class="form-field" style="width:450px">
+                    <mat-label>Email Address</mat-label>
+                    <input  matInput   type="email"  name="email"  [(ngModel)]="user.email"
+                      required  #email="ngModel"  />
+                    <div *ngIf="email.invalid && email.touched" class="error">
+                      Valid Email is required.
+                    </div>
+                  </mat-form-field>
+                </div>
+            
+                <!-- Detect My Location -->
+                <div class="form-group">
+                  <button type="button" class="location-button" (click)="detectLocation()">
+                    <span class="material-icons">location_on</span> Detect my location
+                  </button>
+                </div>
+            
+                <!-- Address -->
+                <div class="form-group">
+                  <mat-form-field  class="form-field" style="width:450px">
+                    <mat-label>Address</mat-label>
+                    <input matInput name="address" [(ngModel)]="user.address" />
+                  </mat-form-field>
+                </div>
+            
+                <!-- City and State -->
+                <div class="form-row">
+                  <div class="form-group">
+                    <mat-form-field  class="form-field">
+                      <mat-label>City</mat-label>
+                      <input matInput name="city" [(ngModel)]="user.city" />
+                    </mat-form-field>
+                  </div>
+
+                  <div class="form-group">
+                    <mat-form-field  class="form-field">
+                      <mat-label>State</mat-label>
+                      <input matInput name="state" [(ngModel)]="user.state" />
+                    </mat-form-field>
+                  </div>
+                </div>
+            
+                <!-- Country and Zipcode -->
+                <div class="form-row">
+                  <div class="form-group">
+                    <mat-form-field  class="form-field">
+                      <mat-label>Country</mat-label>
+                      <input matInput name="zip" [(ngModel)]="user.country" />
+                    </mat-form-field>
+                  </div>
+                  <div class="form-group">
+                    <mat-form-field  class="form-field">
+                      <mat-label>Zipcode</mat-label>
+                      <input matInput name="zip" [(ngModel)]="user.zip" />
+                    </mat-form-field>
+                  </div>
+                </div>
+            
+                <!-- Buttons -->
+                <div class="form-actions">
+                  <button type="button"  (click)="onCancel(userForm)" class="cancel-button">Cancel</button>
+                  <button type="submit" [disabled]="userForm.invalid" class="save-button">
+                    Save
+                  </button>
+                </div>
+              </form>
+           
+            </div>
+          </div> 
+        </div>
+    </div> 
+    
+</div> 

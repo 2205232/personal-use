@@ -1,0 +1,19 @@
+ <!-- Header Section -->
+ <div class="header">
+    <div class="header-left">
+      <img src="/assets/roboh2.jpg"  alt="Your Image">
+      <span class="app-title">DigiSahayak</span>
+    </div>
+    
+    <div class="header-right">
+      <div style="width:100%" *ngIf="isLoggedIn" >
+        <div style="border-right:2px solid #E1F1D5;"> 
+        <span style="position: relative; margin-right: 15px;">{{ username }}</span>
+        </div>
+      </div>
+      <div style ="cursor: pointer;">
+        <a *ngIf="!isLoggedIn" (click)="userlogin()">Login</a>
+        <a *ngIf="isLoggedIn" href="/dashboard" (click)="userlogout()">Logout</a>
+      </div>
+    </div>
+</div>

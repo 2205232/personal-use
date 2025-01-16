@@ -1,0 +1,46 @@
+.signin-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #d5e7e7;
+  }
+  
+  mat-card {
+    width: 350px;
+    height: 380px;
+    text-align: center;
+  }
+  mat-card-header{
+    padding: 16px ;
+    display:flex;
+    flex-direction: column;
+
+  }
+  mat-card-title {
+    margin:16px
+  }
+   mat-card-subtitle{
+    margin :16px;
+  }
+  mat-card-footer{
+    margin: 0px 32px 0px 32px;
+    padding: 16px;
+    width: 256px;
+    text-align: left;
+  }
+  .google-signin-button{
+    background-image: url('/assets/Google-Big-Button.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+    width: 251px;
+    height: 40px;
+    cursor: pointer;
+  }
+
+  .terms-link{
+    text-decoration-line: none;
+    color: #1976d2;
+  }

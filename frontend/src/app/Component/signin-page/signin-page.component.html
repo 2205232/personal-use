@@ -1,0 +1,109 @@
+<div class="login-container">
+  <div class="login-background-image">
+  </div>
+  <div class="login-form">
+      
+      <div class="login-header">DigiSahayak</div>
+      <div class="login-header-2">Sign in</div>
+      <div class="login-header-3">Enter your basic details</div>
+     
+      <form [formGroup]="signinForm" (ngSubmit)="onSubmit()">
+        <div class="input-field">
+          <mat-form-field class="form-field">
+            <mat-label>Full Name</mat-label>
+            <input matInput formControlName="fullName" placeholder="Full Name"
+            >
+            <mat-error *ngIf="signinForm.get('fullName')?.invalid && 
+             signinForm.get('fullName')?.touched">
+             Full name is required
+             </mat-error>
+        </mat-form-field>
+        </div>
+        
+        <div class="input-field">
+          <mat-form-field class="form-field">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" placeholder="Enter Email">
+            <mat-error *ngIf="signinForm.get('email')?.invalid && 
+            signinForm.get('email')?.touched && signinForm.get('email')?.errors?.['required']">
+               Email is required
+            </mat-error>
+            <mat-error *ngIf="signinForm.get('email')?.invalid && 
+            signinForm.get('email')?.touched && signinForm.get('email')?.errors?.['email']">
+               Please enter a valid email
+            </mat-error>
+          </mat-form-field>
+        </div>
+        
+        <div  style="position: relative; display: inline-block;">
+          <mat-form-field class="form-field">
+            <mat-label>Password</mat-label>
+            <input matInput [type]="showPassword ? 'text' : 'password'" 
+            formControlName="password" 
+            placeholder="Enter Password"
+            class="password-input"
+            minlength="6"
+            #password
+            (focus)="onFocus()" (blur)="onBlur()"/>
+          </mat-form-field>
+          <div class="validation-message" *ngIf="showValidation">
+          <b>Your Password must be:</b>
+         <p [ngClass]="{'valid': !signinForm.get('password')?.errors?.['lowercase'], 
+        'invalid': signinForm.get('password')?.errors?.['lowercase']}">
+            <i [class]="!signinForm.get('password')?.errors?.['lowercase'] ? 'fa fa-check' : 'fa fa-xmark'">
+            </i>
+            Atleast one lowercase letter
+        </p>
+
+        <p [ngClass]="{'valid': !signinForm.get('password')?.errors?.['uppercase'], 
+        'invalid': signinForm.get('password')?.errors?.['uppercase']}">
+            <i [class]="!signinForm.get('password')?.errors?.['uppercase'] ? 'fa fa-check' : 'fa fa-xmark'"></i>
+            Atleast one uppercase letter
+        </p>
+
+        <p [ngClass]="{'valid': !signinForm.get('password')?.errors?.['number'], 
+        'invalid': signinForm.get('password')?.errors?.['number']}">
+            <i [class]="!signinForm.get('password')?.errors?.['number'] ? 'fa fa-check' : 'fa fa-xmark'"></i>
+            Atleast one number
+        </p>
+       
+        <p [ngClass]="{'valid': !signinForm.get('password')?.errors?.['specialChar'], 
+        'invalid': signinForm.get('password')?.errors?.['specialChar']}">
+            <i [class]="!signinForm.get('password')?.errors?.['specialChar'] ? 'fa fa-check' : 'fa fa-xmark'"></i>
+           Atleast one special character
+        </p>
+
+        <p [ngClass]="{'valid': !signinForm.get('password')?.errors?.['minlength'], 
+        'invalid': signinForm.get('password')?.errors?.['minlength']}">
+            <i [class]="!signinForm.get('password')?.errors?.['minlength'] ? 'fa fa-check' : 'fa fa-xmark'"></i>
+            Be atleast 6 to 10 characters
+        </p>
+      </div>
+        </div>
+          <div class="input-field">
+          <mat-form-field class="form-field">
+            <mat-label>Confirm Password</mat-label>
+            <input matInput [type]="showPassword ? 'text' : 'password'" formControlName="confirmPassword" 
+            placeholder="Confirm Password">
+            <mat-error *ngIf="signinForm.get('confirmPassword')?.hasError('mismatch') &&
+             signinForm.get('confirmPassword')?.touched">
+              Passwords do not match.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="options">
+          <mat-checkbox (change)="togglePasswordVisibility()">Show Password</mat-checkbox>
+          <button mat-flat-button class="signin-button" type="submit" [disabled]="!signinForm.valid"
+          (click)="goToLogin()"
+          >Sign in</button> 
+        </div>
+        <p class="signup-prompt">
+          Already have an account? <a href="/Login">Login</a>
+      </p>
+      <button class="google-signin-button"
+          (click)="redirectToGoogle()">
+          </button>
+                   
+</form>
+  </div>
+</div>

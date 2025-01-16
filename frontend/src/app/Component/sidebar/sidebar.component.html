@@ -1,0 +1,92 @@
+<div class="sidebar">
+  <div class="logo">
+    <h2>DigiSahayak</h2>
+    <button class="new-chat" [disabled]="newchaticon" (click)="createNewChat()">+ New Chat</button>
+  </div>
+
+  <div class="history-container">
+    <mat-form-field class="example-full-width">   
+      <input type="text" matInput [disabled]="!isSearchActive" placeholder="Your History"
+    [(ngModel)]="keyword" (ngModelChange)="onSearchInput($event)" 
+    >
+    
+      <mat-icon matSuffix style="cursor: pointer;" (click)="toggleSearch()">{{ isSearchActive ? 'close' : 'search' }}</mat-icon>
+    </mat-form-field>    
+  </div>
+  
+  <!-- Filtered History -->
+  <div class="chat-list">
+    <div *ngFor="let chat of chatsBackup" class="chat-item" 
+      [class.active]="chat.chatId === activeChatId" (click)="selectChat(chat.chatId)">       
+      {{ chat.chatPreview ? chat.chatPreview : 'Start a new Conversation' }}
+  </div>
+  <div *ngIf="!chatsBackup.length ">
+    <p>No messages found </p>
+  </div>
+  </div>
+  
+
+  <div class="sidebar-options">
+    <div class="divider"></div>
+    <div class="sidebar-option-allign" *ngIf="isLoggedIn" >
+      <mat-icon>cloud_download</mat-icon> <a (click)="uploadDoc()" class="margin-left">Upload Document</a>
+    </div>    
+    <div class="divider"></div>
+    <div class="sidebar-option-allign">
+      <mat-icon>quiz</mat-icon><a class="margin-left" (click)="openFaq()" >FAQs</a>
+    </div>
+    <div class="divider"></div>
+    <div class="sidebar-option-allign" (click)="settings()">
+      <mat-icon>settings</mat-icon><a class="margin-left">Settings</a>
+    </div>
+    
+    <div class="divider"></div>
+    <div class="sidebar-option-allign black-background" (click)="openModal()" >
+         
+      <mat-icon>account_circle</mat-icon><a *ngIf="isLoggedIn" class="user-name">User
+        <br>
+        <div>
+        {{email}}  
+      </div>
+      </a>
+      <!-- <div class=" "> {{email}}</div>   -->
+      <span>
+      <div *ngIf="!isLoggedIn" class="sidebar-link" (click)="userlogin()">
+        <a >Login</a><span class="gap"><mat-icon>keyboard_arrow_down</mat-icon></span>
+      </div>
+      <div *ngIf="isLoggedIn"  class="sidebar-link"
+      href="/dashboard">
+        <!-- <a class="user-name">{{username}}</a>  -->
+        <span class="gap">
+          
+          <mat-icon *ngIf="isModalopen" (click)="openModal()"> keyboard_arrow_up</mat-icon>
+          <mat-icon *ngIf="!isModalopen" (click)="openModal()"> keyboard_arrow_down</mat-icon>
+        </span>
+      
+        <!-- <a class="sidebar-link">{{email}}</a>  -->
+      
+      </div>
+    </span>
+    </div>
+    
+
+    <div class="modal-backdrop" *ngIf="isModalopen">
+      <div class="modal-content">
+        <span class="material-icons close-icon" (click)="closeModal()">close</span>
+    
+        <div class="modal-body">
+          <ul class="modal-menu">
+            <li>
+              <span class="material-icons" (click)="userProfile()">account_circle</span> My Profile
+            </li>
+            <li>
+              <span class="material-icons" (click)="userlogout()">logout</span> Log Out
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="divider"></div>
+
+</div>
