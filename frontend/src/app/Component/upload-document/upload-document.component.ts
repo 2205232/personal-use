@@ -19,7 +19,7 @@ import {MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog.component/dialog.component';
 import { RetrianDialougeComponent } from '../retrian-dialouge/retrian-dialouge.component';
-// import { UploadService } from '../../services/upload.service';
+import { UploadService } from '../../services/upload.service';
 @Component({
   selector: 'app-upload-document',
   standalone: true,
@@ -58,7 +58,7 @@ export class UploadDocumentComponent implements OnInit{
   showtable: boolean = true;
 
   @ViewChild('filter') filter!: HTMLInputElement;
-  constructor(private uploadService: ChatServiceService ,private router: Router,
+  constructor(private fileUploadService: UploadService ,private router: Router,
     private http: HttpClient, private snackBar: MatSnackBar, private dialog: MatDialog
     ) {}
 
@@ -146,8 +146,6 @@ export class UploadDocumentComponent implements OnInit{
     this.uploadedFiles = [];
   }
 
-
-  // Simulate file upload
   uploadFiles(): void {
     if (this.files.length === 0) {
       alert('No files selected!');
@@ -163,56 +161,54 @@ export class UploadDocumentComponent implements OnInit{
       this.progress += 100 / totalFiles; 
 
       if (this.progress >= 100) {
-        clearInterval(interval); // Stop progress
+        clearInterval(interval); 
         this.uploading = false;
   
-        // Simulate files being uploaded
-        this.files.forEach((file) => {
-          this.uploadedFiles.push({
-            isSelected: false,
+        this.fileUploadService.uploadFilesToGCP(this.files).subscribe((response: any) => {
+          this.uploadedFiles = response.files.map((file: any) => ({
             name: file.name,
-            size: file.size,
-            type: file.type,
-            status: '', // No status initially
-          });
-        });
-        if(this.uploadedFiles.length>0 )  {  
-          this.showtable=true;    
-          const dialogRef = this.dialog.open(DialogComponent, {      
-            //width: '400px',
-            data: { files: this.uploadedFiles }, // Pass uploaded files to dialog
-          });
-          this.showtable=true;  
-          dialogRef.afterClosed().subscribe((result) => {
-            this.showtable=true;  
-            if (result === 1) {
-              // Process Now
-              this.uploadedFiles.forEach((file) => (file.status = 'Processed'));
-              this.openProcessingDialog();
-             
-            } else {
-              // Process Later
-              this.uploadedFiles.forEach((file) => (file.status = 'Unprocessed'));
-              //this.returnToTable();
-              this.showtable=false;
-            }
-          });
-        }
+            status: 'Uploaded',
+          }));
+          if(this.uploadedFiles.length>0 )  {  
+            this.showtable=true; 
+            const dialogRef = this.dialog.open(DialogComponent, {
+              data: { files: this.uploadedFiles },
+            });
+            this.showtable=true;
+            dialogRef.afterClosed().subscribe((result) => {
+              this.showtable=true;  
+              if (result === 1) {
+                this.openProcessingDialog();
+              } else {
+                this.uploadedFiles.forEach((file) => (file.status = 'Unprocessed'));
+                this.showtable=false;
+              }
+            });
+          }
+          
+         });
        
         this.files = [];
       }
     }, 500)
-
-    
     this.isShowUploadedFiles = true;
     this.selectedTabIndex = 0;
   }
+
   openProcessingDialog() {
-    const dialogRef = this.dialog.open(RetrianDialougeComponent,{
-      data:{ }
-    });
-    dialogRef.afterClosed().subscribe(() => {
-      this.showtable=false; 
+    const fileNames = this.uploadedFiles.map((file) => file.name);
+    this.fileUploadService.processFiles(fileNames).subscribe((response: any) => {
+      this.uploadedFiles.forEach((file) => {
+        const processedFile = response.files.find((f: any) => f.name === file.name);
+        file.status = processedFile ? processedFile.status : 'Unprocessed';
+      });
+
+      const dialogRef = this.dialog.open(RetrianDialougeComponent, {
+      });
+
+      dialogRef.afterClosed().subscribe(() => {
+        this.showtable = true;
+      });
     });
    
   }

@@ -19,11 +19,12 @@ export class DialogComponent {
   ngOnInit() {
     this.dialogRef.disableClose = true;
   }
-  processNow(){
-    this.dialogRef.close(1);
+  processNow(result:number){
+    //this.dialogRef.close(1);
+    this.dialogRef.close(result);
    
   }
-  processLater(){
+  processLater(result:number){
     this.dialogRef.close(0);
   }
 

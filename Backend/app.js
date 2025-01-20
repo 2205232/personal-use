@@ -5,7 +5,7 @@ import cookieParse from 'cookie-parser';
 // import chatRoutes  from './src/routes/chatRoutes.js';
 // import FileUploadRoutes from './src/routes/UploadRoutes.js';
 // import createAccountRoutes from './src/routes/createAccountRoutes.js';
-
+import uploadRoutes from './src/routes/fileUploadRoutes.js';
 
 // Initialize Express
 const app = express();
@@ -16,7 +16,7 @@ app.use(cookieParse());
 
 // Register routes
 // app.use('/api', chatRoutes);
-// app.use('/api', FileUploadRoutes);
+ app.use('/api', uploadRoutes);
 // app.use('/api', createAccountRoutes);
 
 
